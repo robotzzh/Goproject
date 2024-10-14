@@ -2,11 +2,24 @@
 
 package common
 
+import (
+	"math"
+)
+
 // @brief Matrix type is private and information about Matrix columns rows and datas
 type Matrix struct {
 	rows, cols int
 	data []float64
 } 
+
+// normal matrix norm
+type Normal_matrix_type int
+const(
+	FrobeniusN Normal_matrix_type = iota
+	Norm_1
+	InfinityNm
+	SpectralN
+)
 
 // Part of Matrix's functions
 func NewMatrix(rows, cols int) *Matrix {
@@ -79,6 +92,7 @@ func Complex_Func(M *Matrix ,CFUNC operation) *Matrix{
     return res
 }
 
+
 // 增广矩阵生成
 func AugmentMatrix(M *Matrix, vec *Matrix) *Matrix{
 	res := NewMatrix(M.rows, M.cols + vec.cols)
@@ -91,6 +105,41 @@ func AugmentMatrix(M *Matrix, vec *Matrix) *Matrix{
         }
     }
     return res
+}
+
+// 矩阵的模
+func CalculateMatrixNorm(M *Matrix,Type Normal_matrix_type) float64 {
+	switch Type {
+    case FrobeniusN:
+        sum := 0.0
+        for i:=0;i<M.rows;i++{
+            for j:=0;j<M.cols;j++{
+                sum += M.Get(i,j)*M.Get(i,j)
+            }
+        }
+        return math.Sqrt(sum)
+    case Norm_1:
+        sum := 0.0
+		maxsum := 0.0
+        for i:=0;i<M.rows;i++{
+            for j:=0;j<M.cols;j++{
+                sum += math.Abs(M.Get(i,j))
+            }
+			if sum > maxsum {
+                maxsum = sum
+            }
+        }
+        return maxsum
+	// TODO: 完成各个范式的代码
+    default:
+		sum := 0.0
+        for i:=0;i<M.rows;i++{
+            for j:=0;j<M.cols;j++{
+                sum += M.Get(i,j)*M.Get(i,j)
+            }
+        }
+        return math.Sqrt(sum)
+	}
 }
 
 // Part of Matrix's methods
