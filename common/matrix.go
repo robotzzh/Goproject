@@ -54,12 +54,14 @@ func Matrix_sub(m1 *Matrix,m2 *Matrix) *Matrix {
 	}
 }
 
-func Matrix_scalar_mul(coefficient float64,m *Matrix){
+func Matrix_scalar_mul(coefficient float64,m *Matrix)*Matrix{
+	res := NewMatrix(m.rows,m.cols)
 	for i:=0;i<m.rows;i++{
 		for j:=0;j<m.cols;j++{
-			m.Set(i,j,m.Get(i,j)*coefficient)
+			res.Set(i,j,m.Get(i,j)*coefficient)
 		}
 	}
+	return res
 }
 
 func Matrix_mul(m1 *Matrix,m2 *Matrix) *Matrix{
