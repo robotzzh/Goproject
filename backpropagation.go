@@ -2,7 +2,7 @@
  * @Author: zzh weiersili2021@163.com
  * @Date: 2024-10-14 15:44:14
  * @LastEditors: zzh weiersili2021@163.com
- * @LastEditTime: 2024-10-14 21:47:37
+ * @LastEditTime: 2024-10-14 23:28:26
  * @FilePath: /Goproject/Complex_learning/backpropagation.go
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -10,27 +10,37 @@ package main
 
 import (
 	"fmt"
-	"github.com/zzh/Goproject/backpropagation/common/Matrix"
+	"github.com/zzh/Goproject/backpropagation/common"
 )
 
+func frontprop(Input *common.Matrix,Weight *common.Matrix) *common.Matrix {
+	OneMatrix := common.NewMatrix(1,1)
+	OneMatrix.Set(0,0,1)
+	Input = common.AugmentMatrix(Input,OneMatrix)
+	return common.Complex_Func(common.Matrix_mul(Input,Weight),common.Sigmoid)
+}
 
 func main(){
 	fmt.Println("The project is about backpropagation")
-	m1 := Matrix.NewMatrix(2,2)
-	m2 := Matrix.NewMatrix(2,2)
-	m1.Set(0,0,1)
-	m1.Set(0,1,2)
-	m1.Set(1,0,3)
-	m1.Set(1,1,4)
-	m2.Set(0,0,1)
-	m2.Set(0,1,2)
-	m2.Set(1,0,3)
-	m2.Set(1,1,4)
+	Input := common.NewMatrix(1,2)
+	Output := common.NewMatrix(1,2)
+	Weight := common.NewMatrix(3,2)
+	
 
-	fmt.Println(m1)
-	m1.T()
-	fmt.Println(m1)
-	fmt.Println(Matrix.Matrix_mul(m1,m2))
-	Matrix.Matrix_scalar_mul(0.0,m1)
-	fmt.Println(m1)
+	Input.Set(0,0,0.05)
+	Input.Set(0,1,0.1)
+
+	Output.Set(0,0,0.99)
+	Output.Set(0,1,0.99)
+
+	Weight.Set(0,0,0.15)
+	Weight.Set(0,1,0.2)
+	Weight.Set(1,0,0.15)
+	Weight.Set(1,1,0.2)
+	// Offset part
+	Weight.Set(2,0,0.35)
+	Weight.Set(2,1,0.35)
+	
+	O1:=frontprop(Input, Weight)
+	fmt.Println( O1)
 }
