@@ -2,13 +2,14 @@
  * @Author: zzh weiersili2021@163.com
  * @Date: 2024-10-14 16:33:37
  * @LastEditors: zzh weiersili2021@163.com
- * @LastEditTime: 2024-10-14 21:40:30
+ * @LastEditTime: 2024-10-14 21:44:22
  * @FilePath: /Goproject/backpropagation/common/Matrix/Matrix.go
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 
 package Matrix
 
+// @brief Matrix type is private and information about Matrix columns rows and datas
 type matrix struct {
 	rows, cols int
 	data []float64
@@ -79,4 +80,13 @@ func Matrix_mul(m1 *matrix,m2 *matrix) *matrix{
 		}
 		return res
 	}
+}
+
+// @brief Matrix transformation
+func (M *matrix) T(){
+	for i:=0;i<M.rows;i++{
+        for j:=i+1;j<M.cols;j++{
+            M.data[i*M.cols+j],M.data[j*M.cols+i] = M.data[j*M.cols+i],M.data[i*M.cols+j]
+        }
+    }
 }
