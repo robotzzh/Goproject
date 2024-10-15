@@ -4,6 +4,7 @@ package common
 
 import (
 	"math"
+	"fmt"
 )
 
 // @brief Matrix type is private and information about Matrix columns rows and datas
@@ -26,6 +27,7 @@ func NewMatrix(rows, cols int) *Matrix {
     return &Matrix{rows, cols, make([]float64, rows*cols)}
 }
 
+// 矩阵加法
 func Matrix_add(m1 *Matrix,m2 *Matrix) *Matrix {
 	if(m1.rows != m2.rows)||(m1.cols != m2.cols){
 		panic("Matrix_add fatal")
@@ -40,9 +42,10 @@ func Matrix_add(m1 *Matrix,m2 *Matrix) *Matrix {
 	}
 }
 
+// 矩阵减法
 func Matrix_sub(m1 *Matrix,m2 *Matrix) *Matrix {
 	if(m1.rows != m2.rows)||(m1.cols != m2.cols){
-		panic("Matrix_add fatal")
+		panic(fmt.Sprintf("Matrix_sub fatal \nm1.rows:%d ,m1.cols:%d\nm2.rows:%d,m2.rows:%d ",m1.rows,m1.cols,m2.rows,m2.cols))
 	}else{
 		res := NewMatrix(m1.rows,m1.cols)
 		for i:=0;i<m1.rows;i++{
@@ -54,6 +57,7 @@ func Matrix_sub(m1 *Matrix,m2 *Matrix) *Matrix {
 	}
 }
 
+// 矩阵数乘
 func Matrix_scalar_mul(coefficient float64,m *Matrix)*Matrix{
 	res := NewMatrix(m.rows,m.cols)
 	for i:=0;i<m.rows;i++{
@@ -64,6 +68,7 @@ func Matrix_scalar_mul(coefficient float64,m *Matrix)*Matrix{
 	return res
 }
 
+// 矩阵乘法
 func Matrix_mul(m1 *Matrix,m2 *Matrix) *Matrix{
 	if m1.cols != m2.rows{
 		panic("Matrix_mul fatal")
@@ -83,7 +88,7 @@ func Matrix_mul(m1 *Matrix,m2 *Matrix) *Matrix{
 }
 
 type operation func(float64) float64
-
+// 对矩阵中每个元素都进行特殊的函数处理
 func Complex_Func(M *Matrix ,CFUNC operation) *Matrix{
 	res := NewMatrix(M.rows,M.cols)
     for i:=0;i<res.rows;i++{
@@ -144,6 +149,45 @@ func CalculateMatrixNorm(M *Matrix,Type Normal_matrix_type) float64 {
 	}
 }
 
+
+// diagonal matrix cols must be 1
+func ToDiagonalMatrix(M *Matrix) *Matrix {
+	total_len := M.rows * M.cols
+	res := NewMatrix(total_len, total_len)
+	for i:=0;i<M.cols;i++{
+		res.Set(i,i,M.Get(0,i))
+	}
+	return res
+}
+
+func FillDiagonalMatrix(M *Matrix) *Matrix {
+	res := NewMatrix(M.rows, M.cols)
+	for i := 0; i < M.rows; i++ {
+		for j := 0; j < M.cols; j++{
+			res.Set(i,j,M.Get(i,i))
+		}
+	}
+	return res
+}
+
+func CombineMatrixByCol(M1 *Matrix, M2*Matrix)*Matrix {
+	if M1.cols!= M2.cols {
+        panic(fmt.Sprintf("Matrix_sub fatal \nm1.rows:%d ,m1.cols:%d\nm2.rows:%d,m2.cols:%d ",M1.rows,M1.cols,M2.rows,M2.cols))
+    } else {
+        res := NewMatrix(M1.rows + M2.rows, M1.cols)
+        for i:=0;i<M1.rows;i++{
+            for j:=0;j<M1.cols;j++{
+                res.Set(i,j,M1.Get(i,j))
+            }
+        }
+        for i:=0;i<M2.rows;i++{
+            for j:=0;j<M2.cols;j++{
+                res.Set(i+M1.rows,j,M2.Get(i,j))
+            }
+        }
+        return res
+    }
+}
 // Part of Matrix's methods
 // @brief Matrix transformation
 func (M *Matrix) T() *Matrix { 
